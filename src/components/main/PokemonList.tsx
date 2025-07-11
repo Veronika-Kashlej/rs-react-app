@@ -2,20 +2,22 @@ import { Pokemon, PokemonApiResponse, PokemonDetails } from '@/types/pokemon';
 import { Component } from 'react';
 import './PokemonList.css';
 
-interface MainProps {
+interface PokemonListProps {
   results: Pokemon[];
 }
 
-class Main extends Component<MainProps> {
+class PokemonList extends Component<PokemonListProps> {
   state = {
     pokemonDetails: [],
+    loading: false,
+    error: null,
   };
 
   componentDidMount() {
     this.fetchPokemonDetails();
   }
 
-  componentDidUpdate(prevProps: MainProps) {
+  componentDidUpdate(prevProps: PokemonListProps) {
     if (prevProps.results !== this.props.results) {
       this.fetchPokemonDetails();
     }
@@ -45,6 +47,7 @@ class Main extends Component<MainProps> {
   async fetchPokemonDetails() {
     const normalizedResults = this.normalizeResults(this.props.results);
     if (normalizedResults.length === 0) return;
+    this.setState({ loading: true, error: null });
     try {
       const details = await Promise.all(
         normalizedResults.map(async (pokemon) => {
@@ -70,20 +73,39 @@ class Main extends Component<MainProps> {
 
       this.setState({ pokemonDetails: details });
     } catch (error) {
-      console.error(error);
+      this.setState({
+        error:
+          error instanceof Error ? error.message : 'Failed to fetch details',
+        pokemonDetails: [],
+      });
+    } finally {
+      this.setState({ loading: false });
     }
   }
 
   render() {
-    const { pokemonDetails } = this.state;
+    const { pokemonDetails, loading, error } = this.state;
     const normalizedResults = this.normalizeResults(this.props.results);
-
+    if (error) {
+      return <div className="error-message">{error}</div>;
+    }
     if (normalizedResults.length === 0)
       return <div className="no-results">No Pokemon found</div>;
 
     return (
       <main className="pokemon-container">
-        <div className="pokemon-grid">
+        {loading && (
+          <div className="skeleton-grid">
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="skeleton-card">
+                <div className="skeleton-image"></div>
+                <div className="skeleton-text"></div>
+                <div className="skeleton-text"></div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className={`pokemon-grid ${loading ? 'loading' : ''}`}>
           {pokemonDetails.map((pokemon: PokemonDetails) => (
             <div key={pokemon.id} className="pokemon-card">
               <img
@@ -137,4 +159,4 @@ class Main extends Component<MainProps> {
   }
 }
 
-export default Main;
+export default PokemonList;
