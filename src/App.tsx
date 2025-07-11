@@ -3,13 +3,15 @@ import './App.css';
 import Search from './components/Search/Search';
 import Main from './components/Main/Main';
 
-interface AppState {
-  results: Array<{
-    id: string;
-    name: string;
-    description: string;
-  }>;
+interface Pokemon {
+  name: string;
+  url: string;
 }
+
+interface AppState {
+  results: Pokemon[];
+}
+
 type AppProps = Record<string, never>;
 
 class App extends Component<AppProps, AppState> {
@@ -26,8 +28,22 @@ class App extends Component<AppProps, AppState> {
   }
   handleSearch(query: string) {
     localStorage.setItem('query', query);
-    //api request logic here
-    console.log(query);
+    this.fetchPokemon(query);
+  }
+  async fetchPokemon(query: string = '') {
+    try {
+      const url = query
+        ? `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
+        : 'https://pokeapi.co/api/v2/pokemon?limit=20';
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error('Error fetching Pokemon:', error);
+    }
   }
   render() {
     return (

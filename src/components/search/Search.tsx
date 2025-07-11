@@ -35,7 +35,7 @@ class Search extends Component<SearchProps, SearchState> {
       <header>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Enter the full name of the pokemon..."
           onKeyDown={this.handleKeyPress}
           onChange={this.handleChange}
         />
