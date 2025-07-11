@@ -1,35 +1,45 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import { Component } from 'react';
 import './App.css';
+import Search from './components/Search/Search';
+import Main from './components/Main/Main';
 
-function App() {
-  const [count, setCount] = useState(0);
+interface AppState {
+  results: Array<{
+    id: string;
+    name: string;
+    description: string;
+  }>;
+}
+type AppProps = Record<string, never>;
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+class App extends Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+    super(props);
+    this.state = {
+      results: [],
+    };
+    this.handleSearch = this.handleSearch.bind(this);
+  }
+  componentDidMount(): void {
+    const query = localStorage.getItem('query') || '';
+    this.handleSearch(query);
+  }
+  handleSearch(query: string) {
+    localStorage.setItem('query', query);
+    //api request logic here
+    console.log(query);
+  }
+  render() {
+    return (
+      <div className="wrapper">
+        <Search
+          onSearch={this.handleSearch}
+          initialQuery={localStorage.getItem('query') || ''}
+        />
+        <Main />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+    );
+  }
 }
 
 export default App;
