@@ -1,12 +1,8 @@
 import { Component } from 'react';
 import './App.css';
-import Search from './components/Search/Search';
-import Main from './components/Main/Main';
-
-interface Pokemon {
-  name: string;
-  url: string;
-}
+import { Pokemon } from './types/pokemon';
+import Search from './components/search/Search';
+import PokemonList from './components/main/PokemonList';
 
 interface AppState {
   results: Pokemon[];
@@ -40,19 +36,24 @@ class App extends Component<AppProps, AppState> {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
+
+      const dataParam = data.results ? data.results : [data];
+      this.setState({
+        results: dataParam,
+      });
     } catch (error) {
       console.error('Error fetching Pokemon:', error);
     }
   }
   render() {
+    const { results } = this.state;
     return (
       <div className="wrapper">
         <Search
           onSearch={this.handleSearch}
           initialQuery={localStorage.getItem('query') || ''}
         />
-        <Main />
+        <PokemonList results={results} />
       </div>
     );
   }
