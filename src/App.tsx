@@ -85,7 +85,13 @@ class App extends Component<AppProps, AppState> {
         />
         <ErrorTestButton throwError={this.throwTestError} />
         {loading && <div className="loading-spinner"></div>}
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div className="error-message">
+            <h2>Oops! Something went wrong</h2>
+            <p>{error}</p>
+            <p>Please try another search or check your connection.</p>
+          </div>
+        )}{' '}
         {!loading && !error && <PokemonList results={results} />}
       </div>
     );

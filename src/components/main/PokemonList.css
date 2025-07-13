@@ -215,11 +215,31 @@
   border-bottom: none;
 }
 
-.no-results {
-  text-align: center;
-  padding: 50px;
-  font-size: 1.2rem;
-  color: #666;
+@keyframes moveDitto {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  20%,
+  60% {
+    transform: translateX(-5px);
+  }
+
+  40%,
+  80% {
+    transform: translateX(5px);
+  }
 }
 
 @media (max-width: 1040px) {

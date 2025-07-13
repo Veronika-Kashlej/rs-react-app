@@ -84,14 +84,7 @@ class PokemonList extends Component<PokemonListProps> {
   }
 
   render() {
-    const { pokemonDetails, loading, error } = this.state;
-    const normalizedResults = this.normalizeResults(this.props.results);
-    if (error) {
-      return <div className="error-message">{error}</div>;
-    }
-    if (normalizedResults.length === 0)
-      return <div className="no-results">No Pokemon found</div>;
-
+    const { pokemonDetails, loading } = this.state;
     return (
       <main className="pokemon-container">
         {loading && (
