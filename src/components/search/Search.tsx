@@ -38,6 +38,8 @@ class Search extends Component<SearchProps, SearchState> {
           placeholder="Enter the full name of the pokemon..."
           onKeyDown={this.handleKeyPress}
           onChange={this.handleChange}
+          autoFocus
+          value={this.state.query}
         />
         <button onClick={this.handleSearch}>Search</button>
       </header>
