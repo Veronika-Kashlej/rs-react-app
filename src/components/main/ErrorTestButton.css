@@ -1,0 +1,65 @@
+.error-test-button {
+  padding: 12px 40px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #ff3b30, #ff5e52);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow:
+    0 4px 8px rgba(255, 59, 48, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.error-test-button:hover {
+  background: linear-gradient(135deg, #ff5e52, #ff3b30);
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 16px rgba(255, 59, 48, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.error-test-button::after {
+  content: '😈';
+  position: absolute;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition:
+    right 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    opacity 0.3s ease;
+  font-size: 1.3em;
+  z-index: -1;
+}
+
+.error-test-button:hover::after {
+  right: 10px;
+  opacity: 1;
+}
+
+.error-test-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s ease;
+  z-index: -1;
+  border-radius: 50px;
+}
+
+.error-test-button:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
