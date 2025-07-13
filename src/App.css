@@ -71,3 +71,35 @@
   opacity: 0.5;
   pointer-events: none;
 }
+
+.header-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.error-fallback {
+  padding: 20px;
+  background: #ffecec;
+  border: 1px solid #ffcccc;
+  border-radius: 5px;
+  margin: 20px auto;
+  max-width: 500px;
+  text-align: center;
+}
+
+.error-fallback button {
+  background: #ff4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.error-fallback button:hover {
+  background: #cc0000;
+}

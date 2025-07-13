@@ -3,11 +3,13 @@ import './App.css';
 import { Pokemon } from './types/pokemon';
 import Search from './components/search/Search';
 import PokemonList from './components/main/PokemonList';
+import { ErrorTestButton } from './components/main/ErrorTestButton';
 
 interface AppState {
   results: Pokemon[];
   loading: boolean;
   error: string | null;
+  hasCriticalError: boolean;
 }
 
 type AppProps = Record<string, never>;
@@ -19,9 +21,13 @@ class App extends Component<AppProps, AppState> {
       results: [],
       loading: false,
       error: null,
+      hasCriticalError: false,
     };
     this.handleSearch = this.handleSearch.bind(this);
   }
+  throwTestError = () => {
+    this.setState({ hasCriticalError: true });
+  };
   componentDidMount(): void {
     const query = localStorage.getItem('query') || '';
     this.handleSearch(query);
@@ -65,16 +71,25 @@ class App extends Component<AppProps, AppState> {
     });
   }
   render() {
+    if (this.state.hasCriticalError) {
+      throw new Error('This is a test error from the button');
+    }
+
     const { results, loading, error } = this.state;
+
     return (
       <div className="wrapper">
-        <Search
-          onSearch={this.handleSearch}
-          initialQuery={localStorage.getItem('query') || ''}
-        />
+        <div className="header-controls">
+          <Search
+            onSearch={this.handleSearch}
+            initialQuery={localStorage.getItem('query') || ''}
+          />
+          <ErrorTestButton throwError={this.throwTestError} />
+        </div>
+
         {loading && <div className="loading-spinner"></div>}
         {error && <div className="error-message">{error}</div>}
-        {!loading && !error && <PokemonList results={results} />}{' '}
+        {!loading && !error && <PokemonList results={results} />}
       </div>
     );
   }
