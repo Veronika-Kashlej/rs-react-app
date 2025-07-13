@@ -222,18 +222,14 @@
   color: #666;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1040px) {
   .pokemon-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 674px) {
   .pokemon-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pokemon-stats {
     grid-template-columns: 1fr;
   }
 }

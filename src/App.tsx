@@ -79,14 +79,11 @@ class App extends Component<AppProps, AppState> {
 
     return (
       <div className="wrapper">
-        <div className="header-controls">
-          <Search
-            onSearch={this.handleSearch}
-            initialQuery={localStorage.getItem('query') || ''}
-          />
-          <ErrorTestButton throwError={this.throwTestError} />
-        </div>
-
+        <Search
+          onSearch={this.handleSearch}
+          initialQuery={localStorage.getItem('query') || ''}
+        />
+        <ErrorTestButton throwError={this.throwTestError} />
         {loading && <div className="loading-spinner"></div>}
         {error && <div className="error-message">{error}</div>}
         {!loading && !error && <PokemonList results={results} />}

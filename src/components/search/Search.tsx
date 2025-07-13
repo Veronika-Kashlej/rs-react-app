@@ -41,7 +41,9 @@ class Search extends Component<SearchProps, SearchState> {
           autoFocus
           value={this.state.query}
         />
-        <button onClick={this.handleSearch}>Search</button>
+        <button className="search-button" onClick={this.handleSearch}>
+          Search
+        </button>
       </header>
     );
   }
