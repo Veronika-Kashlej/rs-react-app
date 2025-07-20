@@ -88,7 +88,7 @@ class PokemonList extends Component<PokemonListProps> {
     return (
       <main className="pokemon-container">
         {loading && (
-          <div className="skeleton-grid">
+          <div className="skeleton-grid" role="loading">
             {[...Array(6)].map((_, i) => (
               <div key={i} className="skeleton-card">
                 <div className="skeleton-image"></div>
