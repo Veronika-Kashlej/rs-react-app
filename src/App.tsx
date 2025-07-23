@@ -2,11 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import './App.css';
 import Search from './components/search/Search';
 import PokemonList from './components/main/PokemonList';
+import { useLocalStorage } from './hooks/useLocalStorage';
 
 function App() {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [localData, setLocalData] = useLocalStorage('query', '');
   const fetchPokemon = useCallback(async (query: string = '') => {
     const url = query
       ? `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
@@ -30,7 +32,7 @@ function App() {
   }, []);
   const handleSearch = useCallback(
     async (query: string) => {
-      localStorage.setItem('query', query);
+      setLocalData(query);
       setIsLoading(true);
       setError(null);
 
@@ -48,15 +50,11 @@ function App() {
     [fetchPokemon]
   );
   useEffect(() => {
-    const query = localStorage.getItem('query') || '';
-    handleSearch(query);
-  }, [handleSearch]);
+    handleSearch(localData);
+  }, [handleSearch, localData]);
   return (
     <div className="wrapper">
-      <Search
-        onSearch={handleSearch}
-        initialQuery={localStorage.getItem('query') || ''}
-      />
+      <Search onSearch={handleSearch} initialQuery={localData} />
       {isLoading && <div className="loading-spinner"></div>}
       {error && (
         <div className="error-message">
