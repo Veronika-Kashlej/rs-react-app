@@ -1,51 +1,42 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import './Search.css';
 import React from 'react';
 
-interface SearchProps {
+interface SearchParams {
   onSearch: (query: string) => void;
   initialQuery?: string;
 }
-interface SearchState {
-  query: string;
-}
+function Search({ onSearch, initialQuery = '' }: SearchParams) {
+  const [query, setQuery] = useState(initialQuery);
 
-class Search extends Component<SearchProps, SearchState> {
-  constructor(props: SearchProps) {
-    super(props);
-    this.state = {
-      query: props.initialQuery || '',
-    };
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    setQuery(e.target.value);
   }
-  handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    this.setState({ query: e.target.value });
+
+  function handleSearch(): void {
+    onSearch(query);
   }
-  handleSearch = (): void => {
-    this.props.onSearch(this.state.query);
-  };
-  handleKeyPress = (e: React.KeyboardEvent) => {
+
+  function handleKeyPress(e: React.KeyboardEvent) {
     if (e.key === 'Enter') {
-      this.handleSearch();
+      handleSearch();
     }
-  };
-  render() {
-    return (
-      <header>
-        <input
-          type="text"
-          placeholder="Enter the full name of the pokemon..."
-          onKeyDown={this.handleKeyPress}
-          onChange={this.handleChange}
-          autoFocus
-          value={this.state.query}
-        />
-        <button className="search-button" onClick={this.handleSearch}>
-          Search
-        </button>
-      </header>
-    );
   }
+
+  return (
+    <header>
+      <input
+        type="text"
+        placeholder="Enter the full name of the pokemon..."
+        onKeyDown={handleKeyPress}
+        onChange={handleChange}
+        autoFocus
+        value={query}
+      />
+      <button className="search-button" onClick={handleSearch}>
+        Search
+      </button>
+    </header>
+  );
 }
 export default Search;
