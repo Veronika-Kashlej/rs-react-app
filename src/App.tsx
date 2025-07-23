@@ -1,52 +1,13 @@
-import { Component } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import './App.css';
-import { Pokemon } from './types/pokemon';
 import Search from './components/search/Search';
 import PokemonList from './components/main/PokemonList';
 
-interface AppState {
-  results: Pokemon[];
-  loading: boolean;
-  error: string | null;
-  hasCriticalError: boolean;
-}
-
-type AppProps = Record<string, never>;
-
-class App extends Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props);
-    this.state = {
-      results: [],
-      loading: false,
-      error: null,
-      hasCriticalError: false,
-    };
-    this.handleSearch = this.handleSearch.bind(this);
-  }
-  throwTestError = () => {
-    this.setState({ hasCriticalError: true });
-  };
-  componentDidMount(): void {
-    const query = localStorage.getItem('query') || '';
-    this.handleSearch(query);
-  }
-  async handleSearch(query: string) {
-    localStorage.setItem('query', query);
-    this.setState({ loading: true, error: null });
-    try {
-      await this.fetchPokemon(query);
-    } catch (error) {
-      this.setState({
-        error:
-          error instanceof Error ? error.message : 'Failed to fetch Pokemon',
-        results: [],
-      });
-    } finally {
-      this.setState({ loading: false });
-    }
-  }
-  async fetchPokemon(query: string = '') {
+function App() {
+  const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fetchPokemon = useCallback(async (query: string = '') => {
     const url = query
       ? `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
       : 'https://pokeapi.co/api/v2/pokemon?limit=20';
@@ -64,36 +25,49 @@ class App extends Component<AppProps, AppState> {
     }
 
     const data = await response.json();
-    this.setState({
-      results: data.results ? data.results : [data],
-      error: null,
-    });
-  }
-  render() {
-    if (this.state.hasCriticalError) {
-      throw new Error('This is a test error from the button');
-    }
+    setError(null);
+    setResults(data.results ? data.results : [data]);
+  }, []);
+  const handleSearch = useCallback(
+    async (query: string) => {
+      localStorage.setItem('query', query);
+      setIsLoading(true);
+      setError(null);
 
-    const { results, loading, error } = this.state;
-
-    return (
-      <div className="wrapper">
-        <Search
-          onSearch={this.handleSearch}
-          initialQuery={localStorage.getItem('query') || ''}
-        />
-        {loading && <div className="loading-spinner"></div>}
-        {error && (
-          <div className="error-message">
-            <h2>Oops! Something went wrong</h2>
-            <p>{error}</p>
-            <p>Please try another search or check your connection.</p>
-          </div>
-        )}{' '}
-        {!loading && !error && <PokemonList results={results} />}
-      </div>
-    );
-  }
+      try {
+        await fetchPokemon(query);
+      } catch (error) {
+        setError(
+          error instanceof Error ? error.message : 'Failed to fetch Pokemon'
+        );
+        setResults([]);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [fetchPokemon]
+  );
+  useEffect(() => {
+    const query = localStorage.getItem('query') || '';
+    handleSearch(query);
+  }, [handleSearch]);
+  return (
+    <div className="wrapper">
+      <Search
+        onSearch={handleSearch}
+        initialQuery={localStorage.getItem('query') || ''}
+      />
+      {isLoading && <div className="loading-spinner"></div>}
+      {error && (
+        <div className="error-message">
+          <h2>Oops! Something went wrong</h2>
+          <p>{error}</p>
+          <p>Please try another search or check your connection.</p>
+        </div>
+      )}{' '}
+      {!isLoading && !error && <PokemonList results={results} />}
+    </div>
+  );
 }
 
 export default App;
