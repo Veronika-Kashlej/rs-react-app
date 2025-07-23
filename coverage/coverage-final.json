@@ -2246,12 +2246,12 @@
         "line": 49,
         "loc": {
           "start": { "line": 49, "column": 40 },
-          "end": { "line": 49, "column": 47 }
+          "end": { "line": 83, "column": 5 }
         },
         "locations": [
           {
             "start": { "line": 49, "column": 40 },
-            "end": { "line": 49, "column": 47 }
+            "end": { "line": 83, "column": 5 }
           }
         ]
       },

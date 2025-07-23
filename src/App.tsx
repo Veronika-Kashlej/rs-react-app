@@ -3,7 +3,6 @@ import './App.css';
 import { Pokemon } from './types/pokemon';
 import Search from './components/search/Search';
 import PokemonList from './components/main/PokemonList';
-import { ErrorTestButton } from './components/main/ErrorTestButton';
 
 interface AppState {
   results: Pokemon[];
@@ -83,7 +82,6 @@ class App extends Component<AppProps, AppState> {
           onSearch={this.handleSearch}
           initialQuery={localStorage.getItem('query') || ''}
         />
-        <ErrorTestButton throwError={this.throwTestError} />
         {loading && <div className="loading-spinner"></div>}
         {error && (
           <div className="error-message">
