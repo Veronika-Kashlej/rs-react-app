@@ -1,6 +1,10 @@
 export interface Pokemon {
   name: string;
   url: string;
+  id?: number;
+  sprites?: {
+    front_default: string;
+  };
 }
 export interface PokemonDetails {
   id: string;

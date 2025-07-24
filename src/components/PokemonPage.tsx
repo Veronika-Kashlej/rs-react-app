@@ -1,19 +1,20 @@
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useCallback, useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
 import Search from './search/Search';
 import PokemonList from './main/PokemonList';
 import { Pokemon } from '@/types/pokemon';
 import { Pagination } from './main/Pagination';
 
-function PokemonPage() {
+function PokemonListPage() {
   const [results, setResults] = useState<Pokemon[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [localData, setLocalData] = useLocalStorage('query', '');
   const [searchParams, setSearchParams] = useSearchParams();
   const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 12;
+  const itemsPerPage = 25;
+  const navigate = useNavigate();
 
   const currentPage = Number(searchParams.get('page')) || 1;
 
@@ -35,7 +36,14 @@ function PokemonPage() {
 
         const data = await response.json();
         setError(null);
-        setResults([data]);
+        setResults([
+          {
+            name: data.name,
+            url: `https://pokeapi.co/api/v2/pokemon/${data.id}/`,
+            id: data.id,
+            sprites: data.sprites,
+          },
+        ]);
         setTotalPages(1);
       } else {
         const offset = (page - 1) * itemsPerPage;
@@ -60,11 +68,9 @@ function PokemonPage() {
       setLocalData(query);
       setIsLoading(true);
       setError(null);
-
-      setSearchParams(query ? {} : { page: '1' });
-
       try {
         await fetchPokemon(query, 1);
+        navigate('/');
       } catch (error) {
         setError(
           error instanceof Error ? error.message : 'Failed to fetch Pokemon'
@@ -74,7 +80,7 @@ function PokemonPage() {
         setIsLoading(false);
       }
     },
-    [fetchPokemon, setLocalData, setSearchParams]
+    [fetchPokemon, setLocalData, navigate]
   );
 
   const handlePageChange = useCallback(
@@ -84,8 +90,9 @@ function PokemonPage() {
       setIsLoading(true);
       setError(null);
 
-      setSearchParams({ page: page.toString() });
-
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set('page', page.toString());
+      setSearchParams(newParams);
       try {
         await fetchPokemon('', page);
       } catch (error) {
@@ -99,18 +106,21 @@ function PokemonPage() {
         setIsLoading(false);
       }
     },
-    [fetchPokemon, localData, setSearchParams]
+    [fetchPokemon, localData, setSearchParams, searchParams]
   );
 
   useEffect(() => {
     const page = Number(searchParams.get('page')) || 1;
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set('page', page.toString());
+    setSearchParams(newParams);
     fetchPokemon(localData, page).catch((error) => {
       setError(
         error instanceof Error ? error.message : 'Failed to fetch Pokemon'
       );
       setResults([]);
     });
-  }, []);
+  }, [searchParams, localData, fetchPokemon, setSearchParams]);
 
   return (
     <div className="wrapper">
@@ -124,20 +134,25 @@ function PokemonPage() {
         </div>
       )}
       {!isLoading && !error && (
-        <>
-          <PokemonList results={results} />
-          {!localData && totalPages > 1 && results.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-              disabled={isLoading}
-            />
-          )}
-        </>
+        <div className="master-detail-container">
+          <div className="master-content">
+            <PokemonList results={results} />
+            {!localData && totalPages > 1 && results.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                disabled={isLoading}
+              />
+            )}
+          </div>
+          <div className="detail-content">
+            <Outlet />
+          </div>
+        </div>
       )}
     </div>
   );
 }
 
-export default PokemonPage;
+export default PokemonListPage;
