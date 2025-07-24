@@ -1,70 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
 import './App.css';
-import Search from './components/search/Search';
-import PokemonList from './components/main/PokemonList';
-import { useLocalStorage } from './hooks/useLocalStorage';
+import PokemonPage from './components/PokemonPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
-  const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [localData, setLocalData] = useLocalStorage('query', '');
-  const fetchPokemon = useCallback(async (query: string = '') => {
-    const url = query
-      ? `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
-      : 'https://pokeapi.co/api/v2/pokemon?limit=20';
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(
-        response.status >= 500
-          ? 'Server error'
-          : response.status === 404
-            ? 'Pokemon not found'
-            : 'Failed to fetch data'
-      );
-    }
-
-    const data = await response.json();
-    setError(null);
-    setResults(data.results ? data.results : [data]);
-  }, []);
-  const handleSearch = useCallback(
-    async (query: string) => {
-      setLocalData(query);
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        await fetchPokemon(query);
-      } catch (error) {
-        setError(
-          error instanceof Error ? error.message : 'Failed to fetch Pokemon'
-        );
-        setResults([]);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [fetchPokemon]
-  );
-  useEffect(() => {
-    handleSearch(localData);
-  }, [handleSearch, localData]);
   return (
-    <div className="wrapper">
-      <Search onSearch={handleSearch} initialQuery={localData} />
-      {isLoading && <div className="loading-spinner"></div>}
-      {error && (
-        <div className="error-message">
-          <h2>Oops! Something went wrong</h2>
-          <p>{error}</p>
-          <p>Please try another search or check your connection.</p>
-        </div>
-      )}{' '}
-      {!isLoading && !error && <PokemonList results={results} />}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<PokemonPage />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
+      </Routes>
+    </Router>
   );
 }
 
