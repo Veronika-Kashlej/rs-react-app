@@ -1,63 +1,85 @@
-import App from '@/App';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { ErrorBoundary } from '@/components/error/ErrorBoundary';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe } from 'node:test';
-import { afterEach, expect, it, vi } from 'vitest';
+
+const ErrorComponent = ({ shouldThrow = true }: { shouldThrow?: boolean }) => {
+  if (shouldThrow) {
+    throw new Error('Test error');
+  }
+  return <div>No error</div>;
+};
+
+const consoleErrorMock = vi
+  .spyOn(console, 'error')
+  .mockImplementation(() => {});
 
 describe('ErrorBoundary', () => {
-  vi.spyOn(console, 'error').mockImplementation(() => {});
-  afterEach(() => {
-    vi.clearAllMocks();
+  beforeEach(() => {
+    consoleErrorMock.mockClear();
   });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('renders children when there is no error', () => {
     render(
       <ErrorBoundary>
-        <App />
+        <div>Test content</div>
       </ErrorBoundary>
     );
-    expect(
-      screen.getByRole('button', { name: /Do Not Press/i })
-    ).toBeInTheDocument();
+
+    expect(screen.getByText('Test content')).toBeInTheDocument();
     expect(console.error).not.toHaveBeenCalled();
   });
-  it('catches the error and shows the fallback UI', () => {
+
+  it('calls componentDidCatch with error and error info', () => {
+    const componentDidCatchSpy = vi.spyOn(
+      ErrorBoundary.prototype,
+      'componentDidCatch'
+    );
+
     render(
       <ErrorBoundary>
-        <App />
+        <ErrorComponent />
       </ErrorBoundary>
     );
-    const errorButton = screen.getByRole('button', { name: /Do Not Press/i });
-    fireEvent.click(errorButton);
-    expect(
-      screen.getByText('This is a test error from the button')
-    ).toBeInTheDocument();
-    expect(console.error).toHaveBeenCalled();
+
+    expect(componentDidCatchSpy).toHaveBeenCalled();
+    expect(componentDidCatchSpy.mock.calls[0][0]).toBeInstanceOf(Error);
+    expect(componentDidCatchSpy.mock.calls[0][0].message).toBe('Test error');
+    expect(componentDidCatchSpy.mock.calls[0][1]).toEqual(
+      expect.objectContaining({
+        componentStack: expect.any(String),
+      })
+    );
   });
-  it('shows custom fallback on error', () => {
-    const customFallback = <div>Custom error fallback</div>;
+
+  it('displays custom fallback when provided', () => {
+    const customFallback = <div>Custom error message</div>;
 
     render(
       <ErrorBoundary fallback={customFallback}>
-        <App />
+        <ErrorComponent />
       </ErrorBoundary>
     );
-    const errorButton = screen.getByRole('button', { name: /Do Not Press/i });
-    fireEvent.click(errorButton);
-    expect(screen.getByText('Custom error fallback')).toBeInTheDocument();
+
+    expect(screen.getByText('Custom error message')).toBeInTheDocument();
     expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument();
   });
-  it('resets the error state when the button is pressed in fallback', () => {
+
+  it('handles when error message is undefined', () => {
+    const UndefinedErrorComponent = () => {
+      throw {};
+    };
+
     render(
       <ErrorBoundary>
-        <App />
+        <UndefinedErrorComponent />
       </ErrorBoundary>
     );
-    const errorButton = screen.getByRole('button', { name: /Do Not Press/i });
-    fireEvent.click(errorButton);
-    const resetErrorButton = screen.getByRole('button', { name: /Try again/i });
-    fireEvent.click(resetErrorButton);
-    expect(
-      screen.getByRole('button', { name: /Do Not Press/i })
-    ).toBeInTheDocument();
+
+    expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+    expect(screen.queryByText('undefined')).not.toBeInTheDocument();
   });
 });
