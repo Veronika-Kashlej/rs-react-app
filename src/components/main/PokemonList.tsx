@@ -1,6 +1,6 @@
 import { Pokemon } from '@/types/pokemon';
 import './PokemonList.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getPokemonId, getPokemonImage } from '@/api/getPokemon';
 
 interface PokemonListProps {
@@ -9,9 +9,14 @@ interface PokemonListProps {
 
 function PokemonList({ results }: PokemonListProps) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const handlePokemonSelect = (id: string) => {
-    navigate(`details/${id}`);
+    const params = new URLSearchParams(searchParams.toString());
+    navigate({
+      pathname: `details/${id}`,
+      search: params.toString(),
+    });
   };
 
   return (

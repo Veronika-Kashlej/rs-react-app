@@ -6,12 +6,12 @@ interface PaginationProps {
   disabled?: boolean;
 }
 
-export const Pagination = ({
+export function Pagination({
   currentPage,
   totalPages,
   onPageChange,
   disabled = false,
-}: PaginationProps) => {
+}: PaginationProps) {
   return (
     <div className="pagination">
       <button
@@ -31,4 +31,4 @@ export const Pagination = ({
       </button>
     </div>
   );
-};
+}

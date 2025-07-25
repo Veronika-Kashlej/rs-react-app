@@ -7,7 +7,7 @@ import { getPokemonImage } from '@/api/getPokemon';
 function PokemonDetail() {
   const { id } = useParams();
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -69,7 +69,7 @@ function PokemonDetail() {
   return (
     <div className="pokemon-detail">
       <button className="close-button" onClick={handleCloseDetail}>
-        ×
+        X
       </button>
 
       <div className="detail-header">

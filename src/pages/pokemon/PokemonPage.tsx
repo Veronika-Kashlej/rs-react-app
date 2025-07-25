@@ -1,10 +1,10 @@
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useCallback, useEffect, useState } from 'react';
-import { Outlet, useNavigate, useSearchParams } from 'react-router-dom';
-import Search from './search/Search';
-import PokemonList from './main/PokemonList';
+import { Outlet, useSearchParams } from 'react-router-dom';
+import Search from '../../components/search/Search';
+import PokemonList from '../../components/main/PokemonList';
 import { Pokemon } from '@/types/pokemon';
-import { Pagination } from './main/Pagination';
+import { Pagination } from '../../components/main/Pagination';
 
 function PokemonListPage() {
   const [results, setResults] = useState<Pokemon[]>([]);
@@ -14,7 +14,6 @@ function PokemonListPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [totalPages, setTotalPages] = useState(0);
   const itemsPerPage = 25;
-  const navigate = useNavigate();
 
   const currentPage = Number(searchParams.get('page')) || 1;
 
@@ -69,8 +68,7 @@ function PokemonListPage() {
       setIsLoading(true);
       setError(null);
       try {
-        await fetchPokemon(query, 1);
-        navigate('/');
+        await fetchPokemon(query, currentPage);
       } catch (error) {
         setError(
           error instanceof Error ? error.message : 'Failed to fetch Pokemon'
@@ -80,7 +78,7 @@ function PokemonListPage() {
         setIsLoading(false);
       }
     },
-    [fetchPokemon, setLocalData, navigate]
+    [fetchPokemon, setLocalData, currentPage]
   );
 
   const handlePageChange = useCallback(
