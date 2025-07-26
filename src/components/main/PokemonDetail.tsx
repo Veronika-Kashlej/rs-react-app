@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './PokemonDetail.css';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { PokemonApiResponse, PokemonDetails } from '@/types/pokemon';
 import { getPokemonImage } from '@/api/getPokemon';
 
@@ -10,9 +10,12 @@ function PokemonDetail() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
+  const [searchParams] = useSearchParams();
   const handleCloseDetail = () => {
-    navigate('/');
+    navigate({
+      pathname: '/',
+      search: searchParams.toString(),
+    });
   };
 
   useEffect(() => {
