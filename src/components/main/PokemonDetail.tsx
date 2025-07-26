@@ -10,7 +10,7 @@ function PokemonDetail() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams()[0];
   const handleCloseDetail = () => {
     navigate({
       pathname: '/',

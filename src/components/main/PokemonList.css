@@ -53,30 +53,3 @@
   font-weight: bold;
   font-size: 0.9rem;
 }
-
-/* PokemonPage.css */
-.master-detail-container {
-  display: flex;
-  gap: 10px;
-}
-
-.master-content {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.detail-content {
-  position: sticky;
-  top: 20px;
-  height: fit-content;
-}
-
-@media (max-width: 768px) {
-  .master-detail-container {
-    flex-direction: column;
-  }
-
-  .master-content,
-  .detail-content {
-    max-width: 100%;
-  }
-}

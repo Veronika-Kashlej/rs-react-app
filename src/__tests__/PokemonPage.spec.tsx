@@ -197,7 +197,6 @@ describe('PokemonListPage', () => {
       status: 400,
     } as Response);
 
-    // Simulate search with a query
     vi.mocked(useLocalStorage).mockReturnValue(['pikachu', mockSetLocalData]);
 
     render(<PokemonListPage />);

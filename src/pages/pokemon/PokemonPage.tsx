@@ -5,6 +5,7 @@ import Search from '../../components/search/Search';
 import PokemonList from '../../components/main/PokemonList';
 import { Pokemon } from '@/types/pokemon';
 import { Pagination } from '../../components/main/Pagination';
+import './PokemonPage.css';
 
 function PokemonListPage() {
   const [results, setResults] = useState<Pokemon[]>([]);
