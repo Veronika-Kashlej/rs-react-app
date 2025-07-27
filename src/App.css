@@ -1,6 +1,11 @@
 #root {
+  width: 100%;
   margin: 0 auto;
   text-align: center;
+}
+
+.wrapper {
+  padding: 20px;
 }
 
 .loading-spinner {
@@ -64,21 +69,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.error-test-button {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  margin: 1rem;
-  transition: background-color 0.3s;
-}
-
-.error-test-button:hover {
-  background-color: #d32f2f;
 }
 
 .loading-spinner {

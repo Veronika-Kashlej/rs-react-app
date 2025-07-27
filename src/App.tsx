@@ -1,101 +1,24 @@
-import { Component } from 'react';
 import './App.css';
-import { Pokemon } from './types/pokemon';
-import Search from './components/search/Search';
-import PokemonList from './components/main/PokemonList';
-import { ErrorTestButton } from './components/main/ErrorTestButton';
+import PokemonDetail from './components/main/PokemonDetail';
+import Navigation from './components/navigation/Navigation';
+import AboutPage from './pages/about/AboutPage';
+import NotFoundPage from './pages/not-found/NotFoundPage';
+import PokemonPage from './pages/pokemon/PokemonPage';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-interface AppState {
-  results: Pokemon[];
-  loading: boolean;
-  error: string | null;
-  hasCriticalError: boolean;
-}
-
-type AppProps = Record<string, never>;
-
-class App extends Component<AppProps, AppState> {
-  constructor(props: AppProps) {
-    super(props);
-    this.state = {
-      results: [],
-      loading: false,
-      error: null,
-      hasCriticalError: false,
-    };
-    this.handleSearch = this.handleSearch.bind(this);
-  }
-  throwTestError = () => {
-    this.setState({ hasCriticalError: true });
-  };
-  componentDidMount(): void {
-    const query = localStorage.getItem('query') || '';
-    this.handleSearch(query);
-  }
-  async handleSearch(query: string) {
-    localStorage.setItem('query', query);
-    this.setState({ loading: true, error: null });
-    try {
-      await this.fetchPokemon(query);
-    } catch (error) {
-      this.setState({
-        error:
-          error instanceof Error ? error.message : 'Failed to fetch Pokemon',
-        results: [],
-      });
-    } finally {
-      this.setState({ loading: false });
-    }
-  }
-  async fetchPokemon(query: string = '') {
-    const url = query
-      ? `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`
-      : 'https://pokeapi.co/api/v2/pokemon?limit=20';
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(
-        response.status >= 500
-          ? 'Server error'
-          : response.status === 404
-            ? 'Pokemon not found'
-            : 'Failed to fetch data'
-      );
-    }
-
-    const data = await response.json();
-    this.setState({
-      results: data.results ? data.results : [data],
-      error: null,
-    });
-  }
-  render() {
-    if (this.state.hasCriticalError) {
-      throw new Error('This is a test error from the button');
-    }
-
-    const { results, loading, error } = this.state;
-
-    return (
-      <div className="wrapper">
-        <Search
-          onSearch={this.handleSearch}
-          initialQuery={localStorage.getItem('query') || ''}
-        />
-        <ErrorTestButton throwError={this.throwTestError} />
-        {loading && <div className="loading-spinner"></div>}
-        {error && (
-          <div className="error-message">
-            <h2>Oops! Something went wrong</h2>
-            <p>{error}</p>
-            <p>Please try another search or check your connection.</p>
-          </div>
-        )}{' '}
-        {!loading && !error && <PokemonList results={results} />}
-      </div>
-    );
-  }
+function App() {
+  return (
+    <Router>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={<PokemonPage />}>
+          <Route path="details/:id" element={<PokemonDetail />} />
+        </Route>
+        <Route path="/about" element={<AboutPage />}></Route>
+        <Route path="/*" element={<NotFoundPage />}></Route>
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
