@@ -1,7 +1,10 @@
-import { Pokemon } from '@/types/pokemon';
+import { Pokemon } from '@/store/types/pokemon';
 import './PokemonList.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getPokemonId, getPokemonImage } from '@/api/getPokemon';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/store';
+import { togglePokemonSelection } from '@/store/slices/selectedPokemonsSlice';
 
 interface PokemonListProps {
   results: Pokemon[];
@@ -10,6 +13,10 @@ interface PokemonListProps {
 function PokemonList({ results }: PokemonListProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
+  const selectedPokemons = useSelector(
+    (state: RootState) => state.selectedPokemons.selected
+  );
 
   const handlePokemonSelect = (id: string) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -18,17 +25,27 @@ function PokemonList({ results }: PokemonListProps) {
       search: params.toString(),
     });
   };
-
+  const handleCheckboxChange = (e: React.MouseEvent, pokemon: Pokemon) => {
+    e.stopPropagation();
+    dispatch(togglePokemonSelection(pokemon));
+  };
   return (
     <div className="pokemon-grid">
       {results.map((pokemon) => {
         const id = getPokemonId(pokemon);
+        const isSelected = selectedPokemons.some((p) => getPokemonId(p) === id);
         return (
           <div
             key={id}
-            className="pokemon-card"
+            className={`pokemon-card ${isSelected ? 'selected' : ''}`}
             onClick={() => handlePokemonSelect(id)}
           >
+            <div
+              className="pokemon-checkbox"
+              onClick={(e) => handleCheckboxChange(e, pokemon)}
+            >
+              <input type="checkbox" checked={isSelected} readOnly />
+            </div>
             <img
               src={getPokemonImage(id)}
               alt={pokemon.name}
