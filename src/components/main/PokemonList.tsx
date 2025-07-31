@@ -44,7 +44,12 @@ function PokemonList({ results }: PokemonListProps) {
               className="pokemon-checkbox"
               onClick={(e) => handleCheckboxChange(e, pokemon)}
             >
-              <input type="checkbox" checked={isSelected} readOnly />
+              <input
+                type="checkbox"
+                checked={isSelected}
+                readOnly
+                data-testid={`checkbox-${pokemon.id}`}
+              />
             </div>
             <img
               src={getPokemonImage(id)}

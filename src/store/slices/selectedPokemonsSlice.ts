@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Pokemon } from '../types/pokemon';
 import { getPokemonId } from '@/api/getPokemon';
 
-interface SelectedPokemonsState {
+export interface SelectedPokemonsState {
   selected: Pokemon[];
 }
 
