@@ -1,0 +1,92 @@
+.selected-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.selected-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.selected-panel__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selected-panel__count {
+  background: #4f46e5;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.selected-panel__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.selected-panel__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  outline: none;
+}
+
+.selected-panel__button--clear {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.selected-panel__button--clear:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.selected-panel__button--download {
+  background: rgba(79, 70, 229, 0.1);
+  color: #4f46e5;
+}
+
+.selected-panel__button--download:hover {
+  background: rgba(79, 70, 229, 0.2);
+}
+
+.selected-panel__button--download:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: rgba(156, 163, 175, 0.1);
+  color: #9ca3af;
+}
+
+.icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.selected-panel__button:hover {
+  transform: translateY(-1px);
+}

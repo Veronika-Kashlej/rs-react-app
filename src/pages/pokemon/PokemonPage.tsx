@@ -1,11 +1,12 @@
-import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useLocalStorage } from '@/store/hooks/useLocalStorage';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
 import Search from '../../components/search/Search';
 import PokemonList from '../../components/main/PokemonList';
-import { Pokemon } from '@/types/pokemon';
+import { Pokemon } from '@/store/types/pokemon';
 import { Pagination } from '../../components/main/Pagination';
 import './PokemonPage.css';
+import SelectedPokemonsPanel from '@/components/main/SelectedPokemonsPanel';
 
 function PokemonListPage() {
   const [results, setResults] = useState<Pokemon[]>([]);
@@ -135,6 +136,7 @@ function PokemonListPage() {
       {!isLoading && !error && (
         <div className="master-detail-container">
           <div className="master-content">
+            <SelectedPokemonsPanel />
             <PokemonList results={results} />
             {!localData && totalPages > 1 && results.length > 0 && (
               <Pagination
