@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './PokemonDetail.css';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { PokemonApiResponse, PokemonDetails } from '@/types/pokemon';
+import { PokemonApiResponse, PokemonDetails } from '@/store/types/pokemon';
 import { getPokemonImage } from '@/api/getPokemon';
 
 function PokemonDetail() {

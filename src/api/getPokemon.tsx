@@ -1,4 +1,4 @@
-import { Pokemon } from '@/types/pokemon';
+import { Pokemon } from '@/store/types/pokemon';
 
 export function getPokemonImage(id: string): string {
   return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
