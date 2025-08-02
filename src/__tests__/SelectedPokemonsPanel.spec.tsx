@@ -2,10 +2,10 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import SelectedPokemonsPanel from '@/components/main/SelectedPokemonsPanel';
 import selectedPokemonsReducer, {
   SelectedPokemonsState,
 } from '@/store/slices/selectedPokemonsSlice';
+import SelectedPokemonsPanel from '@/pages/pokemon/components/panel/SelectedPokemonsPanel';
 vi.mock('@/api/getPokemon', () => ({
   getPokemonId: vi.fn((pokemon) => {
     const matches = pokemon.url.match(/\/(\d+)\/$/);

@@ -1,6 +1,6 @@
 import './App.css';
 import PokemonDetail from './pages/pokemon/components/detail/PokemonDetail';
-import Navigation from './components/navigation/Navigation';
+import Navigation from './pages/pokemon/navigation/Navigation';
 import { ThemeProvider } from './context/ThemeContext';
 import AboutPage from './pages/about/AboutPage';
 import NotFoundPage from './pages/not-found/NotFoundPage';

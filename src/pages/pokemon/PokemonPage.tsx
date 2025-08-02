@@ -1,12 +1,13 @@
 import { useLocalStorage } from '@/store/hooks/useLocalStorage';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useSearchParams } from 'react-router-dom';
-import Search from '../../components/search/Search';
-import PokemonList from '../../components/main/PokemonList';
+import Search from './components/search/Search';
 import { Pokemon } from '@/store/types/pokemon';
-import { Pagination } from '../../components/main/Pagination';
 import './PokemonPage.css';
-import SelectedPokemonsPanel from '@/components/main/SelectedPokemonsPanel';
+import { ErrorMessage } from './components/error/ErrorMessage';
+import SelectedPokemonsPanel from './components/panel/SelectedPokemonsPanel';
+import PokemonList from './components/list/PokemonList';
+import { Pagination } from './components/pagination/Pagination';
 
 function PokemonListPage() {
   const [results, setResults] = useState<Pokemon[]>([]);
@@ -126,13 +127,7 @@ function PokemonListPage() {
     <div className="wrapper">
       <Search onSearch={handleSearch} initialQuery={localData} />
       {isLoading && <div className="loading-spinner"></div>}
-      {error && (
-        <div className="error-message">
-          <h2>Oops! Something went wrong</h2>
-          <p>{error}</p>
-          <p>Please try another search or check your connection.</p>
-        </div>
-      )}
+      {error && <ErrorMessage error={error} />}
       {!isLoading && !error && (
         <div className="master-detail-container">
           <div className="master-content">

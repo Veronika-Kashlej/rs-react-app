@@ -1,4 +1,4 @@
-import Navigation from '@/components/navigation/Navigation';
+import Navigation from '@/pages/pokemon/navigation/Navigation';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, BrowserRouter as Router } from 'react-router-dom';

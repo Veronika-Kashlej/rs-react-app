@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import PokemonList from '@/components/main/PokemonList';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '@/store';
 import { togglePokemonSelection } from '@/store/slices/selectedPokemonsSlice';
 import { getPokemonId } from '@/api/getPokemon';
+import PokemonList from '@/pages/pokemon/components/list/PokemonList';
 
 describe('PokemonList', () => {
   const mockPokemons = [

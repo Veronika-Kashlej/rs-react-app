@@ -1,10 +1,11 @@
 import { Pokemon } from '@/store/types/pokemon';
 import './PokemonList.css';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { getPokemonId, getPokemonImage } from '@/api/getPokemon';
-import { useDispatch, useSelector } from 'react-redux';
+import { getPokemonId } from '@/api/getPokemon';
+import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
-import { togglePokemonSelection } from '@/store/slices/selectedPokemonsSlice';
+import { PokemonInfo } from './components/PokemonInfo';
+import { PokemonCheckbox } from './components/PokemonCheckbox';
 
 interface PokemonListProps {
   results: Pokemon[];
@@ -13,7 +14,6 @@ interface PokemonListProps {
 function PokemonList({ results }: PokemonListProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const dispatch = useDispatch();
   const selectedPokemons = useSelector(
     (state: RootState) => state.selectedPokemons.selected
   );
@@ -24,10 +24,6 @@ function PokemonList({ results }: PokemonListProps) {
       pathname: `details/${id}`,
       search: params.toString(),
     });
-  };
-  const handleCheckboxChange = (e: React.MouseEvent, pokemon: Pokemon) => {
-    e.stopPropagation();
-    dispatch(togglePokemonSelection(pokemon));
   };
   return (
     <div className="pokemon-grid">
@@ -40,28 +36,8 @@ function PokemonList({ results }: PokemonListProps) {
             className={`pokemon-card ${isSelected ? 'selected' : ''}`}
             onClick={() => handlePokemonSelect(id)}
           >
-            <div
-              className="pokemon-checkbox"
-              onClick={(e) => handleCheckboxChange(e, pokemon)}
-            >
-              <input
-                type="checkbox"
-                checked={isSelected}
-                readOnly
-                data-testid={`checkbox-${pokemon.id}`}
-              />
-            </div>
-            <img
-              src={getPokemonImage(id)}
-              alt={pokemon.name}
-              className="pokemon-image"
-            />
-            <div className="pokemon-info">
-              <h3 className="pokemon-name">
-                {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-              </h3>
-              <p className="pokemon-id">#{id.padStart(3, '0')}</p>
-            </div>
+            <PokemonCheckbox pokemon={pokemon} isSelected={isSelected} />
+            <PokemonInfo pokemon={pokemon} />
           </div>
         );
       })}

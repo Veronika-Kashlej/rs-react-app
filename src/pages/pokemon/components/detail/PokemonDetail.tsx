@@ -1,22 +1,18 @@
 import { useEffect, useState } from 'react';
 import './PokemonDetail.css';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { PokemonApiResponse, PokemonDetails } from '@/store/types/pokemon';
 import { getPokemonImage } from '@/api/getPokemon';
+import { PokemonTypes } from './components/PokemonTypes';
+import { PokemonStats } from './components/PokemonStats';
+import { PokemonAbilities } from './components/PokemonAbilities';
+import { CloseButton } from './components/CloseButton';
 
 function PokemonDetail() {
   const { id } = useParams();
   const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const searchParams = useSearchParams()[0];
-  const handleCloseDetail = () => {
-    navigate({
-      pathname: '/',
-      search: searchParams.toString(),
-    });
-  };
 
   useEffect(() => {
     if (!id) return;
@@ -62,7 +58,7 @@ function PokemonDetail() {
     return (
       <div className="detail-error">
         <p>{error}</p>
-        <button onClick={handleCloseDetail}>Close</button>
+        <CloseButton />
       </div>
     );
   }
@@ -71,10 +67,7 @@ function PokemonDetail() {
 
   return (
     <div className="pokemon-detail">
-      <button className="close-button" onClick={handleCloseDetail}>
-        X
-      </button>
-
+      <CloseButton />
       <div className="detail-header">
         <img src={pokemon.image} alt={pokemon.name} className="pokemon-image" />
         <div className="pokemon-info">
@@ -82,33 +75,9 @@ function PokemonDetail() {
             {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
           </h3>
           <p className="pokemon-id">#{id?.padStart(3, '0')}</p>
-          <div className="pokemon-types">
-            {pokemon.types?.map((type) => (
-              <span key={type} className={`type-badge type-${type}`}>
-                {type}
-              </span>
-            ))}
-          </div>
-          <div className="pokemon-stats">
-            <div className="pokemon-stats">
-              <div className="stat">
-                <span className="stat-label">Height</span>
-                <span>{pokemon.height}m</span>
-              </div>
-              <div className="stat">
-                <span className="stat-label">Weight</span>
-                <span>{pokemon.weight}kg</span>
-              </div>
-            </div>
-          </div>
-          <div className="pokemon-abilities">
-            <h4>Abilities</h4>
-            <ul>
-              {pokemon.abilities?.map((ability) => (
-                <li key={ability}>{ability.replace('-', ' ')}</li>
-              ))}
-            </ul>
-          </div>
+          <PokemonTypes pokemon={pokemon} />
+          <PokemonStats pokemon={pokemon} />
+          <PokemonAbilities pokemon={pokemon} />
         </div>
       </div>
     </div>
