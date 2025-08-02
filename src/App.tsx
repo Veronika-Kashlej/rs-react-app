@@ -1,5 +1,5 @@
 import './App.css';
-import PokemonDetail from './components/main/PokemonDetail';
+import PokemonDetail from './pages/pokemon/components/detail/PokemonDetail';
 import Navigation from './components/navigation/Navigation';
 import { ThemeProvider } from './context/ThemeContext';
 import AboutPage from './pages/about/AboutPage';
@@ -16,8 +16,9 @@ function App() {
           <Route path="/" element={<PokemonPage />}>
             <Route path="details/:id" element={<PokemonDetail />} />
           </Route>
-          <Route path="/about" element={<AboutPage />}></Route>
-          <Route path="/*" element={<NotFoundPage />}></Route>
+          <Route path="details/:id" element={<PokemonDetail />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </Router>
     </ThemeProvider>
