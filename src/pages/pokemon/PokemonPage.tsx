@@ -1,131 +1,38 @@
-import { useLocalStorage } from '@/store/hooks/useLocalStorage';
-import { useCallback, useEffect, useState } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Search from './components/search/Search';
-import { Pokemon } from '@/store/types/pokemon';
 import './PokemonPage.css';
 import { ErrorMessage } from './components/error/ErrorMessage';
 import SelectedPokemonsPanel from './components/panel/SelectedPokemonsPanel';
 import PokemonList from './components/list/PokemonList';
 import { Pagination } from './components/pagination/Pagination';
+import { useFetchPokemon } from '@/store/hooks/useFetchPokemon';
+import { usePokemonSearch } from '@/store/hooks/usePokemonSearch';
+import { usePagination } from '@/store/hooks/usePagination';
+import { useEffect } from 'react';
 
-function PokemonListPage() {
-  const [results, setResults] = useState<Pokemon[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [localData, setLocalData] = useLocalStorage('query', '');
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 25;
-
-  const currentPage = Number(searchParams.get('page')) || 1;
-
-  const fetchPokemon = useCallback(
-    async (query: string = '', page: number = 1) => {
-      if (query) {
-        const url = `https://pokeapi.co/api/v2/pokemon/${query.toLowerCase().trim()}`;
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          throw new Error(
-            response.status >= 500
-              ? 'Server error'
-              : response.status === 404
-                ? 'Pokemon not found'
-                : 'Failed to fetch data'
-          );
-        }
-
-        const data = await response.json();
-        setError(null);
-        setResults([
-          {
-            name: data.name,
-            url: `https://pokeapi.co/api/v2/pokemon/${data.id}/`,
-            id: data.id,
-            sprites: data.sprites,
-          },
-        ]);
-        setTotalPages(1);
-      } else {
-        const offset = (page - 1) * itemsPerPage;
-        const url = `https://pokeapi.co/api/v2/pokemon?limit=${itemsPerPage}&offset=${offset}`;
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch Pokemon list');
-        }
-
-        const data = await response.json();
-        setError(null);
-        setResults(data.results);
-        setTotalPages(Math.ceil(data.count / itemsPerPage));
-      }
-    },
-    [itemsPerPage]
-  );
-
-  const handleSearch = useCallback(
-    async (query: string) => {
-      setLocalData(query);
-      setIsLoading(true);
-      setError(null);
-      try {
-        await fetchPokemon(query, currentPage);
-      } catch (error) {
-        setError(
-          error instanceof Error ? error.message : 'Failed to fetch Pokemon'
-        );
-        setResults([]);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [fetchPokemon, setLocalData, currentPage]
-  );
-
-  const handlePageChange = useCallback(
-    async (page: number) => {
-      if (localData) return;
-
-      setIsLoading(true);
-      setError(null);
-
-      const newParams = new URLSearchParams(searchParams.toString());
-      newParams.set('page', page.toString());
-      setSearchParams(newParams);
-      try {
-        await fetchPokemon('', page);
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : 'Failed to fetch Pokemon list'
-        );
-        setResults([]);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [fetchPokemon, localData, setSearchParams, searchParams]
-  );
+function PokemonPage() {
+  const { query, handleSearch } = usePokemonSearch();
+  const { currentPage, setPage } = usePagination();
+  const { results, isLoading, error, totalPages, fetchData } =
+    useFetchPokemon();
 
   useEffect(() => {
-    const page = Number(searchParams.get('page')) || 1;
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set('page', page.toString());
-    setSearchParams(newParams);
-    fetchPokemon(localData, page).catch((error) => {
-      setError(
-        error instanceof Error ? error.message : 'Failed to fetch Pokemon'
-      );
-      setResults([]);
-    });
-  }, [searchParams, localData, fetchPokemon, setSearchParams]);
+    fetchData(query, currentPage);
+  }, [currentPage, query, fetchData]);
+
+  const handlePageChange = (page: number) => {
+    if (query) return;
+    setPage(page);
+  };
+
+  const onSearch = (searchQuery: string) => {
+    handleSearch(searchQuery);
+    setPage(1);
+  };
 
   return (
     <div className="wrapper">
-      <Search onSearch={handleSearch} initialQuery={localData} />
+      <Search onSearch={onSearch} initialQuery={query} />
       {isLoading && <div className="loading-spinner"></div>}
       {error && <ErrorMessage error={error} />}
       {!isLoading && !error && (
@@ -133,7 +40,7 @@ function PokemonListPage() {
           <div className="master-content">
             <SelectedPokemonsPanel />
             <PokemonList results={results} />
-            {!localData && totalPages > 1 && results.length > 0 && (
+            {!query && totalPages > 1 && results.length > 0 && (
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -151,4 +58,4 @@ function PokemonListPage() {
   );
 }
 
-export default PokemonListPage;
+export default PokemonPage;
