@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getPokemonImage, getPokemonId } from '@/api/getPokemon';
-import { Pokemon } from '@/types/pokemon';
+import { Pokemon } from '@/store/types/pokemon';
 
 describe('getPokemon utilities', () => {
   describe('getPokemonImage', () => {

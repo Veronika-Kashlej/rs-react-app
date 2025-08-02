@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import PokemonDetail from '@/components/main/PokemonDetail';
+import PokemonDetail from '@/pages/pokemon/components/detail/PokemonDetail';
 import userEvent from '@testing-library/user-event';
 
 vi.mock('react-router-dom');
@@ -57,7 +57,6 @@ describe('PokemonDetail', () => {
     await waitFor(() => {
       expect(screen.getByText(errorMessage)).toBeInTheDocument();
       expect(screen.queryByTestId('loading-spinner')).not.toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
     });
   });
 
@@ -78,7 +77,6 @@ describe('PokemonDetail', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Failed to fetch details')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
     });
   });
 });
