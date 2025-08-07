@@ -1,8 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useGetPokemonDetailsQuery } from '@/store/slices/apiSlice';
 import './PokemonDetail.css';
 import { useParams } from 'react-router-dom';
-import { PokemonApiResponse, PokemonDetails } from '@/store/types/pokemon';
-import { getPokemonImage } from '@/api/getPokemon';
 import { PokemonTypes } from './components/PokemonTypes';
 import { PokemonStats } from './components/PokemonStats';
 import { PokemonAbilities } from './components/PokemonAbilities';
@@ -10,41 +8,11 @@ import { CloseButton } from './components/CloseButton';
 
 function PokemonDetail() {
   const { id } = useParams();
-  const [pokemon, setPokemon] = useState<PokemonDetails | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!id) return;
-
-    const fetchPokemonDetails = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-        if (!response.ok) throw new Error('Pokemon not found');
-        const data: PokemonApiResponse = await response.json();
-        setPokemon({
-          id: id,
-          name: data.name.charAt(0).toUpperCase() + data.name.slice(1),
-          image: getPokemonImage(id),
-          types: data.types.map((t) => t.type.name),
-          abilities: data.abilities.map((a) => a.ability.name),
-          height: data.height / 10,
-          weight: data.weight / 10,
-        });
-        setError(null);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : 'Failed to fetch details'
-        );
-        setPokemon(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPokemonDetails();
-  }, [id]);
+  const {
+    data: pokemon,
+    isLoading,
+    error,
+  } = useGetPokemonDetailsQuery(id!, { skip: !id });
 
   if (isLoading) {
     return (
@@ -57,8 +25,8 @@ function PokemonDetail() {
   if (error) {
     return (
       <div className="detail-error">
-        <p>{error}</p>
         <CloseButton />
+        <p>Failed to fetch details</p>
       </div>
     );
   }
