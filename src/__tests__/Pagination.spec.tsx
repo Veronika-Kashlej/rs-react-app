@@ -1,4 +1,4 @@
-import { Pagination } from '@/pages/pokemon/components/pagination/Pagination';
+import { Pagination } from '@/app/components/pagination/Pagination';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 

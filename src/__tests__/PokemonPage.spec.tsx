@@ -1,11 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useSearchParams } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import selectedPokemonsReducer from '@/store/slices/selectedPokemonsSlice';
 import { useLocalStorage } from '@/store/hooks/useLocalStorage';
-import PokemonPage from '@/pages/pokemon/PokemonPage';
+import { pokemonApi } from '@/store/slices/apiSlice';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import PokemonPage from '@/app/page';
 
 vi.mock('@/store/hooks/useLocalStorage', () => ({
   useLocalStorage: vi.fn(() => ['', vi.fn()]),
@@ -23,14 +25,19 @@ const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
 const createTestStore = () => {
-  return configureStore({
+  const store = configureStore({
     reducer: {
       selectedPokemons: selectedPokemonsReducer,
+      [pokemonApi.reducerPath]: pokemonApi.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(pokemonApi.middleware),
   });
+  setupListeners(store.dispatch);
+  return store;
 };
 
-describe('PokemonListPage', () => {
+describe('PokemonPage', () => {
   const mockPokemonList = {
     results: [
       { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
@@ -43,6 +50,7 @@ describe('PokemonListPage', () => {
     name: 'pikachu',
     id: 25,
     sprites: { front_default: 'pikachu.png' },
+    url: 'https://pokeapi.co/api/v2/pokemon/25/',
   };
 
   beforeEach(() => {
@@ -65,7 +73,7 @@ describe('PokemonListPage', () => {
     );
   };
 
-  it('does not display pagination when searching by name', async () => {
+  it('should not display pagination when searching by name', async () => {
     const mockSetLocalData = vi.fn();
     vi.mocked(useLocalStorage).mockReturnValueOnce([
       'pikachu',
@@ -88,7 +96,7 @@ describe('PokemonListPage', () => {
     });
   });
 
-  it('displays Outlet for Pokemon items', async () => {
+  it('should display Outlet for Pokemon details', async () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve(mockPokemonList),
@@ -108,5 +116,40 @@ describe('PokemonListPage', () => {
     await waitFor(() => {
       expect(screen.getByText('Detail Content')).toBeInTheDocument();
     });
+  });
+
+  it('should display error message when there is an error', async () => {
+    mockFetch.mockRejectedValueOnce(new Error('Network error'));
+
+    renderWithProviders(<PokemonPage />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Oops! Something went wrong/i)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('should reset cache when reset cache button is clicked', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockPokemonList),
+    });
+
+    const store = createTestStore();
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <PokemonPage />
+        </MemoryRouter>
+      </Provider>
+    );
+
+    const resetButton = screen.getByText('Reset all cache');
+    fireEvent.click(resetButton);
+
+    expect(dispatchSpy).toHaveBeenCalledWith(pokemonApi.util.resetApiState());
   });
 });

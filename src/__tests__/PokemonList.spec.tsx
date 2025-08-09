@@ -4,8 +4,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { store } from '@/store';
 import { togglePokemonSelection } from '@/store/slices/selectedPokemonsSlice';
-import { getPokemonId } from '@/api/getPokemon';
-import PokemonList from '@/pages/pokemon/components/list/PokemonList';
+import { getPokemonId } from '@/app/api/getPokemon';
+import PokemonList from '@/app/components/list/PokemonList';
 
 describe('PokemonList', () => {
   const mockPokemons = [

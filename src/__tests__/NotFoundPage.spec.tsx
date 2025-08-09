@@ -1,4 +1,4 @@
-import NotFoundPage from '@/pages/not-found/NotFoundPage';
+import NotFoundPage from '@/app/not-found';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';

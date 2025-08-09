@@ -1,4 +1,4 @@
-import Search from '@/pages/pokemon/components/search/Search';
+import Search from '@/app/components/search/Search';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe } from 'node:test';
 import { beforeEach, expect, it, vi } from 'vitest';

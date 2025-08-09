@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useLocalStorage } from '@/store/hooks/useLocalStorage';
+import { useLocalStorage } from './useLocalStorage';
 
 export function usePokemonSearch(initialQuery = '') {
   const [query, setQuery] = useLocalStorage('query', initialQuery);

@@ -13,20 +13,22 @@ export const usePokemon = (
     isLoading: isLoadingSingle,
     error: errorSingle,
   } = useGetPokemonByNameQuery(query, { skip: !query });
+
   const {
     data: pokemonList,
     isLoading: isLoadingList,
     error: errorList,
   } = useGetPokemonListQuery({ page, limit: itemsPerPage }, { skip: !!query });
 
-  const results = query
-    ? singlePokemon
-      ? [singlePokemon]
-      : []
-    : pokemonList?.results || [];
-  const totalPages = query ? 1 : pokemonList?.totalPages || 0;
-  const isLoading = isLoadingSingle || isLoadingList;
-  const error = errorSingle || errorList;
+  const results =
+    query && singlePokemon ? [singlePokemon] : pokemonList?.results || [];
+
+  const totalPages = pokemonList?.count
+    ? Math.ceil(pokemonList.count / itemsPerPage)
+    : 0;
+
+  const isLoading = query ? isLoadingSingle : isLoadingList;
+  const error = query ? errorSingle : errorList;
 
   return {
     results,

@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import selectedPokemonsReducer, {
   SelectedPokemonsState,
 } from '@/store/slices/selectedPokemonsSlice';
-import SelectedPokemonsPanel from '@/pages/pokemon/components/panel/SelectedPokemonsPanel';
+import SelectedPokemonsPanel from '@/app/components/panel/SelectedPokemonsPanel';
 vi.mock('@/api/getPokemon', () => ({
   getPokemonId: vi.fn((pokemon) => {
     const matches = pokemon.url.match(/\/(\d+)\/$/);

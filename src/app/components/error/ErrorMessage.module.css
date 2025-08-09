@@ -1,0 +1,30 @@
+.error-message {
+  margin: 2rem 15px;
+  padding: 1.5rem;
+  width: 80vw;
+  border-radius: 12px;
+  background-color: var(--color-error-bg);
+  border-left: 5px solid var(--color-error-border-left);
+  box-shadow: 0 4px 6px var(--color-shadow);
+  color: var(--color-error-text);
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.error-message::before {
+  content: '⚠️';
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.error-message h2 {
+  margin: 0 0 0.5rem 0;
+}
+
+.error-message p {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
+}
