@@ -9,12 +9,16 @@ import {
   useGetPokemonByNameQuery,
   useGetPokemonListQuery,
   useRefreshPokemonsMutation,
+  pokemonApi,
 } from '@/store/slices/apiSlice';
 import { usePokemonSearch } from '@/store/hooks/usePokemonSearch';
 import { usePagination } from '@/store/hooks/usePagination';
 import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '@/store';
 
 function PokemonPage() {
+  const dispatch = useDispatch<AppDispatch>();
   const { query, handleSearch } = usePokemonSearch();
   const { currentPage, setPage } = usePagination();
   const [refresh] = useRefreshPokemonsMutation();
@@ -59,6 +63,10 @@ function PokemonPage() {
     }
   };
 
+  const handleResetCache = () => {
+    dispatch(pokemonApi.util.resetApiState());
+  };
+
   const handlePageChange = (page: number) => {
     if (query) return;
     setPage(page);
@@ -72,6 +80,12 @@ function PokemonPage() {
   return (
     <div className="wrapper">
       <Search onSearch={onSearch} initialQuery={query} />
+      <button onClick={handleRefresh} className="refresh-button">
+        Refresh Data
+      </button>
+      <button onClick={handleResetCache} className="refresh-button">
+        Reset all cache
+      </button>
       {isLoading && <div className="loading-spinner"></div>}
       {error && <ErrorMessage error={error} />}{' '}
       {!isLoading && !error && (
@@ -87,9 +101,6 @@ function PokemonPage() {
                 disabled={isLoading || isFetching}
               />
             )}
-            <button onClick={handleRefresh} className="refresh-button">
-              Refresh Data
-            </button>
           </div>
           <div className="detail-content">
             <Outlet />
