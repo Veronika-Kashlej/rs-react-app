@@ -16,6 +16,7 @@ export interface PokemonDetails {
   weight?: number;
 }
 export interface PokemonApiResponse {
+  id: string;
   name: string;
   types: { type: { name: string } }[];
   abilities: { ability: { name: string } }[];
