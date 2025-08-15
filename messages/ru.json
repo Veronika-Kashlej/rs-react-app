@@ -1,0 +1,43 @@
+{
+  "HomePage": {
+    "refresh-button": "Обновить данные",
+    "reset-button": "Очистить кеш",
+    "search-button": "Найти",
+    "search-placeholder": "Введите имя покемона полность...",
+    "prev-button": "Назад",
+    "next-button": "Вперед",
+    "page": ["Страница", "из"]
+  },
+  "AboutPage": {
+    "title": "Обо мне",
+    "name": "Вероника Кашлей",
+    "description": "Фронтенд-разработчик и поклонник мира Покемонов",
+    "course": "Создано в рамках",
+    "school": "Курс React в RS School",
+    "technologies": "Используемые технологии",
+    "button": "← Вернуться к Покемонам"
+  },
+  "Navigation": {
+    "title": "Покемон",
+    "home": "Главная",
+    "about": "О нас"
+  },
+  "SelectedPanel": {
+    "title": "Выбранные покемоны",
+    "clear-button": "Отменить все",
+    "save-button": "Скачать CSV",
+    "save-pending-button": "Генерируем..."
+  },
+  "ErrorMessage": {
+    "title": "Уупс! Что-то пошло не так",
+    "advice": "Попробуйте выполнить другой поиск или проверьте соединение.",
+    "fetch": "Не удалось получить данные"
+  },
+  "PokemonDetails": {
+    "abilities": "Способности",
+    "height": "Рост",
+    "weight": "Вес",
+    "measureHeight": "м",
+    "measureWeight": "кг"
+  }
+}

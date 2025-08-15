@@ -1,0 +1,43 @@
+{
+  "HomePage": {
+    "refresh-button": "Refresh Data",
+    "reset-button": "Reset all cache",
+    "search-button": "Search",
+    "search-placeholder": "Enter the full name of the pokemon...",
+    "prev-button": "Previous",
+    "next-button": "Next",
+    "page": ["Page", "of"]
+  },
+  "AboutPage": {
+    "title": "About me",
+    "name": "Veronika Kashlei",
+    "description": "Frontend Developer & Pokémon Enthusiast",
+    "course": "Built as part of",
+    "school": "RS School React Course",
+    "technologies": "Technologies Used",
+    "button": "← Back to Pokémon"
+  },
+  "Navigation": {
+    "title": "Pokemon",
+    "home": "Home",
+    "about": "About"
+  },
+  "SelectedPanel": {
+    "title": "Selected Pokémons",
+    "clear-button": "Clear All",
+    "save-button": "Export CSV",
+    "save-pending-button": "Generating..."
+  },
+  "ErrorMessage": {
+    "title": "Oops! Something went wrong",
+    "advice": "Please try another search or check your connection.",
+    "fetch": "Failed to fetch details"
+  },
+  "PokemonDetails": {
+    "abilities": "Abilities",
+    "height": "Height",
+    "weight": "Weight",
+    "measureHeight": "m",
+    "measureWeight": "kg"
+  }
+}
