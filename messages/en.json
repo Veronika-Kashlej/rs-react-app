@@ -39,5 +39,11 @@
     "weight": "Weight",
     "measureHeight": "m",
     "measureWeight": "kg"
+  },
+  "NotFoundPage": {
+    "title": "Oops! Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "imageAlt": "Sad Pokémon",
+    "goHome": "Back to Pokémon"
   }
 }

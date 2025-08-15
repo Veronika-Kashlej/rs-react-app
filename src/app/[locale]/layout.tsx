@@ -20,19 +20,14 @@ export default async function LocaleLayout({
   params: { locale: string };
 }) {
   const { locale } = params;
-
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body>
-        <NextIntlClientProvider locale={locale}>
-          <ReduxProvider>
-            <ThemeProvider>
-              <Navigation />
-              <main>{children}</main>
-            </ThemeProvider>
-          </ReduxProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider locale={locale}>
+      <ReduxProvider>
+        <ThemeProvider>
+          <Navigation />
+          <main>{children}</main>
+        </ThemeProvider>
+      </ReduxProvider>
+    </NextIntlClientProvider>
   );
 }
