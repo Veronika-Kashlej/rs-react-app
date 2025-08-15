@@ -1,10 +1,10 @@
 'use client';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/providers/ThemeProvider';
 import styles from './Navigation.module.css';
 import { useTranslations } from 'next-intl';
 import LanguageSwitcher from '../language/LanguageSwitcher';
+import { Link } from '@/i18n/navigation';
 
 function Navigation() {
   const homeT = useTranslations('Navigation');
