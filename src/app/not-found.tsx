@@ -1,7 +1,7 @@
 import styles from './not-found.module.css';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import Link from 'next/link';
 export default function NotFound() {
   const t = useTranslations('NotFoundPage');
   return (

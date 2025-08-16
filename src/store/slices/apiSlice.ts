@@ -63,7 +63,7 @@ export const pokemonApi = createApi({
         height: response.height / 10,
         weight: response.weight / 10,
       }),
-      providesTags: (result, error, id) =>
+      providesTags: (result, id) =>
         result
           ? [{ type: 'Pokemon', id: Number(id) }]
           : [{ type: 'Pokemon', id: 'LIST' }],
